@@ -1,0 +1,182 @@
+C# PROGRAM TO CHECK ALL THE CHECKBOXE'S UNDER A <DIV> TAG CONTAINER.
+<div class="facetContainerDiv">
+    <div>
+        <label class="facetLabel">
+            <input class="facetCheck" type="checkbox" />
+        </label>
+        <label class="facetLabel">
+            <input class="facetCheck" type="checkbox" />
+        </label>
+        <label class="facetLabel">
+            <input class="facetCheck" type="checkbox" />
+        </label>
+        <label class="facetLabel">
+            <input class="facetCheck" type="checkbox" />
+        </label>
+        <label class="facetLabel">
+            <input class="facetCheck" type="checkbox" />
+        </label>
+    </div>
+</div>
+--------------------------------------------------------------------
+
+
+using System;
+using System.Collections.Generic;
+using OpenQA.Selenium;
+using OpenQA.Selenium.Firefox;
+using OpenQA.Selenium.Support.UI;
+
+namespace SeleniumTests
+{
+  class ChechBoxClickWthIndex
+    {
+        static void Main(string[] args)
+        {
+
+            IWebDriver driver = new FirefoxDriver();
+
+            driver.Navigate().GoToUrl("file:///C:/Users/Ganesh/Desktop/CheckBox.html");
+
+            // Create an interface WebElement of the div under div with **class as facetContainerDiv**
+            IWebElement WebElement =    driver.FindElement(By.XPath("//div[@class='facetContainerDiv']/div"));
+            // Create an IList and intialize it with all the elements of div under div with **class as facetContainerDiv**
+            IList<IWebElement> AllCheckBoxes = WebElement.FindElements(By.XPath("//label/input"));
+            // Get the count of check boxes 
+            int RowCount = WebElement.FindElements(By.XPath("//label/input")).Count;
+            for (int i = 0; i < RowCount; i++)
+            {
+            // Check the check boxes based on index
+               AllCheckBoxes[i].Click();
+
+            }
+            Console.WriteLine(RowCount);
+            Console.ReadLine(); 
+
+        }
+    }
+}
+----------------------------------------------------------------
+To make the Selenium WebDriver click on an element as soon as it is clickable,instead of loading the entire page
+To make the Selenium WebDriver click on an element as soon as it is clickable,
+instead of loading the entire page, you can change the profile settings in case of FireFoxDriver  
+to make it not wait for the full page to load.
+
+		FirefoxProfile profile = new FirefoxProfile();
+        profile.SetPreference("webdriver.load.strategy", "unstable");
+---------------------------------------------------------------------------
+implicit wait - It's global setting applicable for all elements and if element appear before specified time then 
+script will start executing otherwise script will throw NoSuchElementException.  
+In the below example an implicit wait of 1 second is added in the line 
+driver.Manage().Timeouts().ImplicitlyWait(TimeSpan.FromSeconds(1));
+
+ class WaitTimeoutsTimers
+    {
+            static void Main(string[] args)
+            {
+                IWebDriver driver = new FirefoxDriver();
+                driver.Manage().Timeouts().ImplicitlyWait(TimeSpan.FromSeconds(10));
+                driver.Navigate().GoToUrl("https://www.google.com.au");
+                driver.FindElement(By.Name("q")).Clear();
+                driver.FindElement(By.Name("q")).SendKeys("Increwin");
+                if (driver.FindElement(By.Name("btnK")).Displayed)
+                {
+                    driver.FindElement(By.Name("btnK")).Click();
+                 }
+                else if (driver.FindElement(By.Name("btnG")).Displayed)
+                {
+
+                    driver.FindElement(By.Name("btnG")).Click();
+                    driver.FindElement(By.XPath("//a[@href='http://www.inncrewin.com/']")).Click();
+                }
+-----------------------------------------------------------------------
+<table id="accounts"> 
+    <caption>Table in markup with data in it</caption>
+    <thead> 
+           <tr> 
+                <th>Due Date</th> 
+                <th>Account Number</th> 
+                <th>Quantity</th> 
+                <th>Amount Due</th> 
+           </tr> 
+    </thead> 
+    <tbody> 
+           <tr> 
+                <td>1/23/1999</td> 
+                <td>29e8548592d8c82</td> 
+                <td>12</td> 
+                <td>$150.00</td> 
+           </tr> 
+           <tr> 
+                <td>5/19/1999</td> 
+                <td>83849</td> 
+                <td>8</td> 
+                <td>$60.00</td> 
+           </tr> 
+            ... 
+   </tbody> 
+</table>
+--------------------(2)
+				IWebDriver driver = new ChromeDriver(@"C:\Libraries");
+				driver.Navigate().GoToUrl("file:///C:/Users/Ganesh/Desktop/Checkbo2x.html");
+                if (driver.FindElement(By.XPath("//table[@id='accounts']/thead/tr/th")).Displayed)
+                {
+                    IWebElement webElementHead = driver.FindElement(By.XPath("//table[@id='accounts']/thead/tr"));
+                    IList<IWebElement> ElementCollectionHead = webElementHead.FindElements(By.XPath("//table[@id='accounts']/thead/tr/th"));
+                    foreach (IWebElement item in ElementCollectionHead)
+                    {
+                        Console.WriteLine(item.Text);
+                    }
+                }
+-------------------(3)
+			 driver.Navigate().GoToUrl("file:///C:/Users/Cegon/Desktop/Checkbo2x.html");
+                if (driver.FindElement(By.XPath("//table[@id='accounts']/tbody/tr")).Displayed)
+                {
+                    IWebElement webElementBody = driver.FindElement(By.XPath("//table[@id='accounts']/tbody/tr"));
+                    IList<IWebElement> ElementCollectionBody = webElementBody.FindElements(By.XPath("//table[@id='accounts']/tbody/tr"));
+                    foreach (IWebElement item in ElementCollectionBody)
+                    {
+                        string[] arr = new string[4];
+                        arr = item.Text.Split(' ');
+                        for (int i = 0; i < arr.Length; i++)
+                        {
+                            Console.WriteLine(arr[i]);
+                        }
+                    }
+                }
+            }
+               
+--------------------------------How to find a value of a cell Dynamically---------
+              IWebDriver driver = new ChromeDriver(@"C:\Libraries\");
+            driver.Navigate().GoToUrl("http://www.qtptutorial.net/automation-practice/");
+            
+            var table = driver.FindElement(By.Id("htmlTableId"));
+            IList<IWebElement> collectionofRows = table.FindElements(By.XPath("//*[@id='htmlTableId']/tbody/tr"));
+            //using Selenium :What is the Salary of SEDT?
+            var columnIndex = -1;
+            var columnCounter = 1;
+            const string DESIRED_COLUMN_HEADER = "Salary";
+            const string DESIRED_VALUE = "Software Development Engineer in Test";
+
+            for (int tr = 0; tr <= collectionofRows.Count; tr++)
+            {
+                var row = collectionofRows[tr];
+                IList<IWebElement> allCellsInRow = row.FindElements(By.XPath("./*"));
+                foreach (var cell in allCellsInRow)
+                {
+                    if (cell.Text == DESIRED_COLUMN_HEADER)
+                    {
+                        columnIndex = columnCounter;
+                    }
+                    if (cell.Text == DESIRED_VALUE)
+                    {
+                        // .//*[@id='htmlTableId']/tbody/tr[2]/td[3]
+                        string salaryLocator = string.Format(".//*[@id='htmlTableId']/tbody/tr[{0}]/td[{1}]", tr + 1, columnIndex);
+                        var salary = driver.FindElement(By.XPath(salaryLocator));
+                        Console.WriteLine("The {0} of {1} is {2}", DESIRED_COLUMN_HEADER, DESIRED_VALUE, salary.Text);
+                    }
+                    columnCounter++;
+                }
+            }
+        }
+
